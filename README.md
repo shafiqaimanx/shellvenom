@@ -1,4 +1,9 @@
 <h1 align="center">ShellVenom</h1>
+
+<p align="center">
+    <img src="https://github.com/shafiqaimanx/shellvenom/blob/main/img/shellvenom.png"/>
+</p>
+
 <p align="center">
     <img src="https://img.shields.io/badge/made%20with-golang-teal?style=flat&logo=go&logoColor=white&labelColor=595959&color=ff99cc"/>
 </p>

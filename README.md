@@ -1,5 +1,3 @@
-<h1 align="center">ShellVenom</h1>
-
 <p align="center">
     <img src="https://github.com/shafiqaimanx/shellvenom/blob/main/img/shellvenom.png"/>
 </p>

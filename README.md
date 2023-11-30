@@ -28,4 +28,4 @@ cd shellvenom
 go build -o shellvenom main.go
 ```
 
-Well, you can get the prebuilt release right ~~here~~!
+Well, you can get the prebuilt release right [here](https://github.com/shafiqaimanx/shellvenom/releases)!

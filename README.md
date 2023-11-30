@@ -13,7 +13,7 @@
     }
     #blue {
         color: #595959;
-        background-color: #80d4ff;e6e6e6
+        background-color: #80d4ff;
         padding: 10px 20px;
         border-radius: 10px;
     }

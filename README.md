@@ -29,3 +29,6 @@ go build -o shellvenom main.go
 ```
 
 Well, you can get the prebuilt release right [here](https://github.com/shafiqaimanx/shellvenom/releases)!
+
+## License
+Everything is licensed under [MIT](https://raw.githubusercontent.com/shafiqaimanx/shellvenom/main/LICENSE) except for a certain part.

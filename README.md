@@ -1,3 +1,36 @@
+<style>
+    #pink {
+        color: #595959;
+        background-color: #ff99cc;
+        padding: 10px 20px;
+        border-radius: 10px;
+    }
+    #green {
+        color: #595959;
+        background-color: #99ff99;
+        padding: 10px 20px;
+        border-radius: 10px;
+    }
+    #blue {
+        color: #595959;
+        background-color: #80d4ff;e6e6e6
+        padding: 10px 20px;
+        border-radius: 10px;
+    }
+    #silver {
+        color: #595959;
+        background-color: #e6e6e6;
+        padding: 10px 20px;
+        border-radius: 10px;
+    }
+    #yellow {
+        color: #595959;
+        background-color: #ffff80;
+        padding: 10px 20px;
+        border-radius: 10px;
+    }
+</style>
+
 <p align="center">
     <img src="https://github.com/shafiqaimanx/shellvenom/blob/main/img/shellvenom.png"/>
 </p>
@@ -13,7 +46,7 @@
     <img src="https://img.shields.io/badge/license-MIT-green?style=flat&logo=creativecommons&logoColor=white&labelColor=595959&color=ffff80"/>
 </p>
 
-## Installation
+<h2 id="pink">Installation</h2>
 `shellvenom` requires <b>go1.21</b> to install successfully. Run the following command to install the latest version.
 
 ```bash
@@ -30,5 +63,5 @@ go build -o shellvenom main.go
 
 Well, you can get the prebuilt release right [here](https://github.com/shafiqaimanx/shellvenom/releases)!
 
-## License
+<h2 id="yellow">License</h2>
 Everything is licensed under [MIT](https://raw.githubusercontent.com/shafiqaimanx/shellvenom/main/LICENSE) except for a certain part.

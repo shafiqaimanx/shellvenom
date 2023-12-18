@@ -2,6 +2,7 @@ package menu
 
 import (
 	"fmt"
+	"os"
 )
 
 const (
@@ -166,7 +167,7 @@ func HelpMenu() {
 	fmt.Printf("%sshellVenom - reverse shell payload generator.%s\n", DARKGRAY, RESET)
 	fmt.Printf("%sThis project was inspire by %s %sand %s%s%s.\n\n", DARKGRAY, shell, DARKGRAY, venom, DARKGRAY, RESET)
 	fmt.Printf("%s%sUsage%s: %sshellvenom%s [flags]\n", BOLD, UNDERSCORE, RESET, BOLD, RESET)
-	fmt.Printf("%s%sExample%s: shellvenom -p unix/bash -lhost=[ip] -lport=[port]\n\n", BOLD, UNDERSCORE, RESET)
+	fmt.Printf("%s%sExample%s: shellvenom -p cmd/unix/reverse_bash -lhost=[ip] -lport=[port]\n\n", BOLD, UNDERSCORE, RESET)
 	fmt.Printf("%s%sFlags%s:\n", BOLD, UNDERSCORE, RESET)
 	fmt.Printf("  -l, -list       <platform>      List all payloads for [platform]. PLatform are: %s%sall%s, %s%sunix%s, %s%swindows%s.\n", ITALIC, UNDERSCORE, RESET, ITALIC, UNDERSCORE, RESET, ITALIC, UNDERSCORE, RESET)
 	fmt.Printf("  -p, -payload    <payloads>      Payload to use (-list %s%sall%s to list).\n", ITALIC, UNDERSCORE, RESET)
@@ -183,7 +184,7 @@ func ListRequiredFlag() {
 func ListingBanner(platformName string, platforms map[string]string) {
 	fmt.Printf("\n[%s%s%s] Listing of unix payloads (%s%d%s total) [-payload <value>]\n", CHARTREUSE, platformName, RESET, CHARTREUSE, len(platforms), RESET)
 	fmt.Printf("============================================================\n\n")
-	fmt.Printf("%s%sName%s\t\t\t\t%s%sDescription%s\n\n", MEDIUMORCHID, UNDERSCORE, RESET, MEDIUMORCHID, UNDERSCORE, RESET)
+	fmt.Printf("  %s%sName%s\t\t\t\t\t%s%sDescription%s\n\n", MEDIUMORCHID, UNDERSCORE, RESET, MEDIUMORCHID, UNDERSCORE, RESET)
 }
 
 func OutputRaw(payloadFlag string, result string) {
@@ -197,4 +198,17 @@ func OutputFile(payloadFlag string, result string) {
 	ShellVenomBanner()
 	fmt.Printf("%s[-]%s Selecting %s%s%s from the payload.\n", CHARTREUSE, RESET, BOLD, payloadFlag, RESET)
 	fmt.Printf("%s[-]%s Payload size: %d bytes\n", CHARTREUSE, RESET, len(result))
+}
+
+func HostandPortErrorHandling(host, port bool) {
+	if (!host && !port) {
+		fmt.Printf("%s[-]%s %sLHOST%s %s&%s %sLPORT%s %svalue is not valid!%s\n", CRIMSON, RESET, BOLD, RESET, ITALIC, RESET, BOLD, RESET, ITALIC, RESET)
+		os.Exit(0)
+	} else if (!host && port) {
+		fmt.Printf("%s[-]%s %sLHOST%s %svalue is not valid!%s\n", CRIMSON, RESET, BOLD, RESET, ITALIC, RESET)
+		os.Exit(0)
+	} else if (!port && host) {
+		fmt.Printf("%s[-]%s %sLPORT%s %svalue is not valid!%s\n", CRIMSON, RESET, BOLD, RESET, ITALIC, RESET)
+		os.Exit(0)
+	}
 }

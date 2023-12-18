@@ -4,18 +4,24 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	"regexp"
 	"sort"
+	"strconv"
 
 	"github.com/shafiqaimanx/shellvenom/src/core"
 	"github.com/shafiqaimanx/shellvenom/src/menu"
 )
 
 func main() {
-	var listFlag bool
-	var payloadFlag string
-	var outputFlag string
+	var listFlag 		bool
+	var outputFlag 		string
+	var payloadFlag 	string
+	var choosenIFace 	string
+	var choosenLHost 	string
+	var choosenLPort 	int
 	var chosenPlatforms []string
+
+	checkIPIntFace 	:= false
+	checkIPRangeRgx := false
 
 	flag.StringVar(&payloadFlag, "payload", "", "")
 	flag.BoolVar(&listFlag, "list", false, "")
@@ -57,6 +63,8 @@ func main() {
 		}
 	}
 
+
+
 	var unixPlatforms = make(map[string]string)
 	var windowsPlatforms = make(map[string]string)
 
@@ -66,7 +74,7 @@ func main() {
 				if platform == chosen {
 					var output string
 					output += platform
-					nameCombined := fmt.Sprintf("%s/%s", output, item.Name)
+					nameCombined := fmt.Sprintf("cmd/%s/%s", output, item.Name)
 					if chosen == "unix" {
 						unixPlatforms[nameCombined] = item.Description
 					} else if chosen == "windows" {
@@ -88,10 +96,10 @@ func main() {
 		for _, nameCombined := range keys {
 			description := unixPlatforms[nameCombined]
 			maxLength := len(nameCombined)
-			if maxLength < 30 {
-				maxLength = 28
+			if maxLength < 35 {
+				maxLength = 35
 			}
-			fmt.Printf("%-*s    %s\n", maxLength, nameCombined, description)
+			fmt.Printf("    %-*s    %s\n", maxLength, nameCombined, description)
 		}
 		fmt.Println("")
 	}
@@ -107,99 +115,85 @@ func main() {
 		for _, nameCombined := range keys {
 			description := windowsPlatforms[nameCombined]
 			maxLength := len(nameCombined)
-			if maxLength < 30 {
-				maxLength = 28
+			if maxLength < 35 {
+				maxLength = 35
 			}
-			fmt.Printf("%-*s    %s\n", maxLength, nameCombined, description)
+			fmt.Printf("    %-*s    %s\n", maxLength, nameCombined, description)
 		}
 		fmt.Println("")
 	}
 
-	check := false
-	for _, ip := range core.GettingIPAddresses() {
-		if core.GettingIPInterfaceName(ip) != *lhostFlag {
-			ipPattern := `^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$`
-			ipRegex := regexp.MustCompile(ipPattern)
-			if ipRegex.MatchString(*lhostFlag) {
-				check = true
-				break
+
+
+	if payloadFlag != "" && *lhostFlag != "" && *lportFlag != "" && outputFlag != "" {
+		checkIPIntFace, choosenIFace = core.CheckIPInterfaceName(*lhostFlag)
+		checkIPRangeRgx = core.CheckIPrange(*lhostFlag)
+
+		host, choosenIPRgx := core.CompareIPwithIntFaceAndRegex(checkIPIntFace, checkIPRangeRgx, lhostFlag)
+		port, choosenPort := core.CheckPortRange(*lportFlag)
+	
+		menu.HostandPortErrorHandling(host, port)
+		if choosenIFace != "" {
+			{}
+		} else if choosenIPRgx != "" {
+			choosenIFace = choosenIPRgx
+		}
+
+		if (host && port) {
+			choosenLHost = choosenIFace
+			choosenLPort = choosenPort
+		}
+
+		for _, item := range core.ReadFileofShell().ShelListz {
+			for _, platform := range core.ExtractPlatforms(item.Platform) {
+				nameCombined := fmt.Sprintf("cmd/%s/%s", platform, item.Name)
+				if payloadFlag == nameCombined {
+					payload := core.DecodeBase64(item.Shell)
+					result := core.FindAvailablePayloadIP(payload, choosenLHost, strconv.Itoa(choosenLPort))
+					menu.OutputFile(payloadFlag, result)
+					core.SavePayloadToFile(result, outputFlag)
+					return
+				}
 			}
 		}
+		fmt.Printf("%s[-]%s %sPayload%s %s%s%s %snot found!%s\n", menu.CRIMSON, menu.RESET, menu.ITALIC, menu.RESET, menu.BOLD, payloadFlag, menu.RESET, menu.ITALIC, menu.RESET)
+		os.Exit(0)
 	}
 
-	if check {
-		if payloadFlag != "" && *lhostFlag != "" && *lportFlag != "" && outputFlag != "" {
-			for _, item := range core.ReadFileofShell().ShelListz {
-				for _, platform := range core.ExtractPlatforms(item.Platform) {
-					nameCombined := fmt.Sprintf("%s/%s", platform, item.Name)
-					if payloadFlag == nameCombined {
-						payload := core.DecodeBase64(item.Shell)
-						result := core.FindAvailablePayloadIP(payload, *lhostFlag, *lportFlag)
-						menu.OutputFile(payloadFlag, result)
-						core.SavePayloadToFile(result, outputFlag)
-						return
-					}
-				}
-			}
+
+
+	if payloadFlag != "" && *lhostFlag != "" && *lportFlag != "" {
+		checkIPIntFace, choosenIFace = core.CheckIPInterfaceName(*lhostFlag)
+		checkIPRangeRgx = core.CheckIPrange(*lhostFlag)
+
+		host, choosenIPRgx := core.CompareIPwithIntFaceAndRegex(checkIPIntFace, checkIPRangeRgx, lhostFlag)
+		port, choosenPort := core.CheckPortRange(*lportFlag)
+	
+		menu.HostandPortErrorHandling(host, port)
+		if choosenIFace != "" {
+			{}
+		} else if choosenIPRgx != "" {
+			choosenIFace = choosenIPRgx
 		}
 
-		if payloadFlag != "" && *lhostFlag != "" && *lportFlag != "" {
-			for _, item := range core.ReadFileofShell().ShelListz {
-				for _, platform := range core.ExtractPlatforms(item.Platform) {
-					nameCombined := fmt.Sprintf("%s/%s", platform, item.Name)
-					if payloadFlag == nameCombined {
-						payload := core.DecodeBase64(item.Shell)
-						result := core.FindAvailablePayloadIP(payload, *lhostFlag, *lportFlag)
-						menu.OutputRaw(payloadFlag, result)					
-						fmt.Println("\n"+result)
-						return
-					}
-				}
-			}
+		if (host && port) {
+			choosenLHost = choosenIFace
+			choosenLPort = choosenPort
 		}
-	} else {
-		if outputFlag != "" {
-			ipList := core.GettingIPAddresses()
-			for i:=0; i<len(ipList); i++ {
-				nameListIndex := core.GettingIPInterfaceName(ipList[i])
-				if nameListIndex == *lhostFlag {
-					for _, item := range core.ReadFileofShell().ShelListz {
-						for _, platform := range core.ExtractPlatforms(item.Platform) {
-							nameCombined := fmt.Sprintf("%s/%s", platform, item.Name)
-							if payloadFlag == nameCombined {
-								payload := core.DecodeBase64(item.Shell)
-								result := core.FindAvailablePayloadInterface(payload, *lportFlag, i, ipList)
-								menu.OutputFile(payloadFlag, result)
-								core.SavePayloadToFile(result, outputFlag)
-								break
-							}
-						}
-					}
-				}
-			}
-		} else {
-			ipList := core.GettingIPAddresses()
-			for i:=0; i<len(ipList); i++ {
-				nameListIndex := core.GettingIPInterfaceName(ipList[i])
-				if nameListIndex == *lhostFlag {
-					for _, item := range core.ReadFileofShell().ShelListz {
-						for _, platform := range core.ExtractPlatforms(item.Platform) {
-							nameCombined := fmt.Sprintf("%s/%s", platform, item.Name)
-							if payloadFlag == nameCombined {
-								payload := core.DecodeBase64(item.Shell)
-								result := core.FindAvailablePayloadInterface(payload, *lportFlag, i, ipList)
-								menu.OutputRaw(payloadFlag, result)
-								fmt.Println("\n"+result)
-								break
-							}
-						}
-					}
-				}
-			}
-		}
-	}
 
-	if !check {
-		return
+		for _, item := range core.ReadFileofShell().ShelListz {
+			for _, platform := range core.ExtractPlatforms(item.Platform) {
+				nameCombined := fmt.Sprintf("cmd/%s/%s", platform, item.Name)
+				if payloadFlag == nameCombined {
+					payload := core.DecodeBase64(item.Shell)
+					result := core.FindAvailablePayloadIP(payload, choosenLHost, strconv.Itoa(choosenLPort))
+					menu.OutputRaw(payloadFlag, result)					
+					fmt.Println(result)
+					return
+				}
+			}
+		}
+		fmt.Printf("%s[-]%s %sPayload%s %s%s%s %snot found!%s\n", menu.CRIMSON, menu.RESET, menu.ITALIC, menu.RESET, menu.BOLD, payloadFlag, menu.RESET, menu.ITALIC, menu.RESET)
+		os.Exit(0)
 	}
 }

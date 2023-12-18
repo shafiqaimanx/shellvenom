@@ -3,6 +3,8 @@ package core
 import (
 	"fmt"
 	"net"
+	"regexp"
+	"strconv"
 )
 
 func GettingIPAddresses() []net.IP {
@@ -53,4 +55,55 @@ func IPToStringSlice(ips []net.IP) []string {
 		ipStrings[i] = ip.String()
 	}
 	return ipStrings
+}
+
+func CheckIPInterfaceName(lhostFlag string) (bool, string) {
+	var result string
+	check := false
+
+	ipList := GettingIPAddresses()
+	for i:=0;i<len(ipList);i++ {
+		nameListIndex := GettingIPInterfaceName(ipList[i])
+		if nameListIndex != lhostFlag {
+			check = false
+		} else {
+			result = IPToStringSlice(ipList)[i]
+			check = true
+			break
+		}
+	}
+	return check, result
+}
+
+func CheckIPrange(lhostFlag string) bool {
+	check := false
+
+	ipPattern := `^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$`
+	ipRegex := regexp.MustCompile(ipPattern)
+	if ipRegex.MatchString(lhostFlag) {
+		check = true
+	} else {
+		check = false
+	}
+	return check
+}
+
+func CheckPortRange(lportFlag string) (bool, int) {
+	port, err := strconv.Atoi(lportFlag)
+	if err != nil || port > 65535 {
+		return false, 0
+	}
+	return true, port
+}
+
+func CompareIPwithIntFaceAndRegex(checkIPIntFace, checkIPRangeRgx bool, lhostFlag *string) (check bool, choosenIFace string) {
+	check = true
+	if (!checkIPIntFace && !checkIPRangeRgx) {
+		check = false
+	} else if checkIPIntFace {
+		{}
+	} else if checkIPRangeRgx {
+		choosenIFace = *lhostFlag
+	}
+	return check, choosenIFace
 }

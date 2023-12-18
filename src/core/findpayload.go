@@ -26,21 +26,3 @@ func FindAvailablePayloadIP(payload string, lhost string, lport string) string {
 	result := strings.Replace(c, "CHANGE_LPORT", lport, 1)
 	return result
 }
-
-//func FindAvailablePayload(payloadFlag string) string {
-//	var result string
-//	payloadFound := false
-//
-//	for _, item := range ReadFileofShell().ShelListz {
-//		payloadName := fmt.Sprintf("%s/%s", item.Platform, item.Name)
-//		if payloadFlag == payloadName {
-//			result = DecodeBase64(item.Shell)
-//			payloadFound = true
-//			break
-//		}
-//	}
-//	if !payloadFound {
-//		fmt.Printf("%s payload not found (%s%s%s)", colors.ERROR, colors.RED, payloadFlag, colors.RESET)
-//	}
-//	return result
-//}

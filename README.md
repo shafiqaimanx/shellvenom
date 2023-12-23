@@ -31,6 +31,8 @@ cd shellvenom
 go build -o shellvenom main.go
 ```
 
+###### Prebuilt release right [here](https://github.com/shafiqaimanx/shellvenom/releases)!
+
 ## 🐍 shellVenom Usages
 <img src="https://github.com/shafiqaimanx/shellvenom/blob/main/img/shellvenom_usage.png"/>
 

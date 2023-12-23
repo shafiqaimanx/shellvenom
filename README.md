@@ -13,14 +13,17 @@
     <img src="https://img.shields.io/badge/license-MIT-green?style=flat&logo=creativecommons&logoColor=white&labelColor=595959&color=ffff80"/>
 </p>
 
-## Installation
-`shellvenom` requires <b>go1.21</b> to install successfully. Run the following command to install the latest version.
+## 📖 Description 
+shellVenom is a CLI tools for generating Linux and Windows reverse shells. The payloads come from libraries called *[revshells.com](https://www.revshells.com/)*, and it's design is based on the classic MSFVenom.
+
+## 📦 Installation
+`shellvenom` requires <b>go1.21+</b> to install successfully. Run the following command to install the latest version.
 
 ```bash
 go install -v github.com/shafiqaimanx/shellvenom@latest
 ```
 
-But, if you want to build on your own: <i>follow the step</i> below.
+###### From the source.
 
 ```bash
 git clone https://github.com/shafiqaimanx/shellvenom.git
@@ -28,7 +31,8 @@ cd shellvenom
 go build -o shellvenom main.go
 ```
 
-Well, you can get the prebuilt release right [here](https://github.com/shafiqaimanx/shellvenom/releases)!
+## 🐍 shellVenom Usages
+<img src="https://github.com/shafiqaimanx/shellvenom/blob/main/img/shellvenom_usage.png"/>
 
-## License
+## ©️ License
 Everything is licensed under [MIT](https://raw.githubusercontent.com/shafiqaimanx/shellvenom/main/LICENSE) except for a certain part.
